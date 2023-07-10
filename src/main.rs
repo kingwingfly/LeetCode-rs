@@ -368,6 +368,7 @@ fn max_area(height: Vec<i32>) -> i32 {
     area as i32
 }
 
+#[cfg(feature = "all")]
 fn int_to_roman(mut num: i32) -> String {
     let mut ans = String::new();
     let foo = |i: i32, symbol: &str, num: &mut i32, ans: &mut String| loop {
@@ -398,7 +399,37 @@ fn int_to_roman(mut num: i32) -> String {
     ans
 }
 
+pub fn roman_to_int(mut s: String) -> i32 {
+    let mut ans = 0;
+    let foo = |i: i32, symbol: &str, ans: &mut i32, s: &mut String| loop {
+        if s.starts_with(symbol) {
+            *ans += i;
+            s.drain(..symbol.len());
+        } else {
+            break;
+        }
+    };
+    for (i, symbol) in [
+        (1000, "M"),
+        (900, "CM"),
+        (500, "D"),
+        (400, "CD"),
+        (100, "C"),
+        (90, "XC"),
+        (50, "L"),
+        (40, "XL"),
+        (10, "X"),
+        (9, "IX"),
+        (5, "V"),
+        (4, "IV"),
+        (1, "I"),
+    ] {
+        foo(i, symbol, &mut ans, &mut s);
+    }
+    ans
+}
+
 fn main() {
-    let v = int_to_roman(1994);
+    let v = roman_to_int("MCMXCIV".to_string());
     dbg!(v);
 }
