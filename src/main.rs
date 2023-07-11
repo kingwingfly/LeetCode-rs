@@ -399,6 +399,7 @@ fn int_to_roman(mut num: i32) -> String {
     ans
 }
 
+#[cfg(feature = "all")]
 pub fn roman_to_int(mut s: String) -> i32 {
     let mut ans = 0;
     let foo = |i: i32, symbol: &str, ans: &mut i32, s: &mut String| loop {
@@ -429,7 +430,77 @@ pub fn roman_to_int(mut s: String) -> i32 {
     ans
 }
 
+#[cfg(feature = "all")]
+fn longest_common_prefix(strs: Vec<String>) -> String {
+    let mut ans = String::new();
+    let mut strs_vec: Vec<_> = strs.iter().map(|s| s.chars()).collect();
+    loop {
+        match strs_vec[0].next() {
+            None => return ans,
+            Some(c1) => {
+                for s in strs_vec[1..].iter_mut() {
+                    match s.next() {
+                        None => return ans,
+                        Some(c2) => {
+                            if c1 != c2 {
+                                return ans;
+                            }
+                        }
+                    }
+                }
+                ans.push(c1);
+            }
+        }
+    }
+    ans
+}
+
+fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+    let mut ans = vec![];
+    if nums.len() < 3 {
+        return ans;
+    }
+    nums.sort();
+    if nums[0] > 0 {
+        return ans;
+    }
+    let loop_to_next = |x: &mut usize, step: isize, nums: &Vec<i32>, edge: usize| {
+        *x = (*x as isize + step) as usize;
+        if step > 0 {
+            while *x < edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        } else {
+            while *x > edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        }
+    };
+    let mut i = 0;
+    while i < nums.len() - 2 && nums[i] <= 0 {
+        let (mut l, mut r) = (i + 1, nums.len() - 1);
+        while l < r {
+            let total = nums[i] + nums[l] + nums[r];
+            match total.cmp(&0) {
+                std::cmp::Ordering::Less => {
+                    loop_to_next(&mut l, 1, &nums, r);
+                }
+                std::cmp::Ordering::Equal => {
+                    ans.push(vec![nums[i], nums[l], nums[r]]);
+                    loop_to_next(&mut l, 1, &nums, r);
+                    loop_to_next(&mut r, -1, &nums, l);
+                }
+                std::cmp::Ordering::Greater => {
+                    loop_to_next(&mut r, -1, &nums, l);
+                }
+            }
+        }
+        loop_to_next(&mut i, 1, &nums, nums.len());
+    }
+    ans
+}
+
 fn main() {
-    let v = roman_to_int("MCMXCIV".to_string());
+    let v = three_sum(vec![0, 0, 0]);
     dbg!(v);
 }
