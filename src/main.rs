@@ -455,6 +455,7 @@ fn longest_common_prefix(strs: Vec<String>) -> String {
     ans
 }
 
+#[cfg(feature = "all")]
 fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
     let mut ans = vec![];
     if nums.len() < 3 {
@@ -482,16 +483,58 @@ fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
         while l < r {
             let total = nums[i] + nums[l] + nums[r];
             match total.cmp(&0) {
-                std::cmp::Ordering::Less => {
-                    loop_to_next(&mut l, 1, &nums, r);
-                }
+                std::cmp::Ordering::Less => loop_to_next(&mut l, 1, &nums, r),
                 std::cmp::Ordering::Equal => {
                     ans.push(vec![nums[i], nums[l], nums[r]]);
                     loop_to_next(&mut l, 1, &nums, r);
                     loop_to_next(&mut r, -1, &nums, l);
                 }
+                std::cmp::Ordering::Greater => loop_to_next(&mut r, -1, &nums, l),
+            }
+        }
+        loop_to_next(&mut i, 1, &nums, nums.len());
+    }
+    ans
+}
+
+fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
+    assert!(nums.len() >= 3);
+    let mut ans = i32::MAX;
+    let mut delta = ans;
+    nums.sort();
+    let mut i = 0;
+    let loop_to_next = |x: &mut usize, step: isize, nums: &Vec<i32>, edge: usize| {
+        *x = (*x as isize + step) as usize;
+        if step > 0 {
+            while *x < edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        } else {
+            while *x > edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        }
+    };
+    let refesh = |total: i32, target: &i32, delta: &mut i32, ans: &mut i32| {
+        let new_dalta = (*target - total).abs();
+        if *delta > new_dalta {
+            *delta = new_dalta;
+            *ans = total;
+        }
+    };
+    while i < nums.len() - 2 {
+        let (mut l, mut r) = (i + 1, nums.len() - 1);
+        while l < r{
+            let total = nums[i] + nums[l] + nums[r];
+            match total.cmp(&target) {
+                std::cmp::Ordering::Less => {
+                    refesh(total, &target, &mut delta, &mut ans);
+                    loop_to_next(&mut l, 1, &nums, r);
+                }
+                std::cmp::Ordering::Equal => return total,
                 std::cmp::Ordering::Greater => {
-                    loop_to_next(&mut r, -1, &nums, l);
+                    refesh(total, &target, &mut delta, &mut ans);
+                    loop_to_next(&mut r, -1, &nums, l)
                 }
             }
         }
@@ -501,6 +544,6 @@ fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
 }
 
 fn main() {
-    let v = three_sum(vec![0, 0, 0]);
+    let v = three_sum_closest(vec![-100,-98,-2,-1], -101);
     dbg!(v);
 }
