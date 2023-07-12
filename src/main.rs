@@ -497,6 +497,7 @@ fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
     ans
 }
 
+#[cfg(feature = "all")]
 fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     assert!(nums.len() >= 3);
     let mut ans = i32::MAX;
@@ -524,7 +525,7 @@ fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     };
     while i < nums.len() - 2 {
         let (mut l, mut r) = (i + 1, nums.len() - 1);
-        while l < r{
+        while l < r {
             let total = nums[i] + nums[l] + nums[r];
             match total.cmp(&target) {
                 std::cmp::Ordering::Less => {
@@ -543,7 +544,56 @@ fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     ans
 }
 
+#[cfg(feature = "all")]
+macro_rules! hashmap {
+    ($($key:expr => $value: expr), *) => {
+        {
+            let mut map = std::collections::HashMap::new();
+            $(map.insert($key, $value);)*
+            map
+        }
+    };
+}
+
+#[cfg(feature = "all")]
+struct LetterCombination<'a> {
+    digits: Vec<&'a str>,
+    ans: Vec<String>,
+}
+
+#[cfg(feature = "all")]
+impl<'a> LetterCombination<'a> {
+    fn new(digits: String) -> Self {
+        assert!(!digits.contains("1"));
+        let dash = ["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"];
+        Self {
+            digits: digits.bytes().map(|i| dash[(i - b'2') as usize]).collect(),
+            ans: vec![],
+        }
+    }
+
+    fn dfs(&mut self) -> Vec<String> {
+        fn recursive(lc: &mut LetterCombination, prefix: String, depth: usize) {
+            if depth == lc.digits.len() && prefix.len() > 0 {
+                lc.ans.push(prefix);
+            } else if depth != lc.digits.len() {
+                for c in lc.digits[depth].chars() {
+                    recursive(lc, format!("{}{}", prefix, c), depth + 1)
+                }
+            }
+        }
+        recursive(self, String::new(), 0);
+        std::mem::take(&mut self.ans)
+    }
+}
+
+#[cfg(feature = "all")]
+fn letter_combinations(digits: String) -> Vec<String> {
+    let mut lc = LetterCombination::new(digits);
+    lc.dfs()
+}
+
 fn main() {
-    let v = three_sum_closest(vec![-100,-98,-2,-1], -101);
+    let v = letter_combinations("889".to_string());
     dbg!(v);
 }
