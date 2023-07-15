@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 /// judge if two numbers in the Vec could sum to target
 #[cfg(target_feature = "all")]
 fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
@@ -593,7 +591,103 @@ fn letter_combinations(digits: String) -> Vec<String> {
     lc.dfs()
 }
 
-fn main() {
-    let v = letter_combinations("889".to_string());
-    dbg!(v);
+#[cfg(feature = "all")]
+fn four_sum(mut nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+    let mut ans = vec![];
+    if nums.len() < 4 {
+        return ans;
+    }
+    let (mut i, mut j) = (0, nums.len() - 1);
+    nums.sort();
+    let loop_to_next = |x: &mut usize, step: isize, nums: &Vec<i32>, edge: usize| {
+        *x = (*x as isize + step) as usize;
+        if step > 0 {
+            while *x < edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        } else {
+            while *x > edge && nums[*x] == nums[(*x as isize - step) as usize] {
+                *x = (*x as isize + step) as usize;
+            }
+        }
+    };
+    enum MyOption {
+        Some(i32),
+        Over,
+        Below,
+    }
+    let sum_nums = |index: [usize; 4], nums: &Vec<i32>| -> MyOption {
+        let mut total = 0;
+        for i in index.into_iter() {
+            if (nums[i] >= 0 && i32::MAX - nums[i] >= total)
+                || (nums[i] < 0 && total >= i32::MIN - nums[i])
+            {
+                total += nums[i];
+            } else if nums[i] >= 0 {
+                return MyOption::Over;
+            } else {
+                return MyOption::Below;
+            }
+        }
+        MyOption::Some(total)
+    };
+    while i < j && i + 3 < nums.len() {
+        while i < j && i + 2 < j && j >= 3 {
+            let (mut l, mut r) = (i + 1, j - 1);
+            while l < r {
+                let total = match sum_nums([i, l, r, j], &nums) {
+                    MyOption::Some(total) => total,
+                    MyOption::Over => {
+                        loop_to_next(&mut r, -1, &nums, l);
+                        continue;
+                    }
+                    MyOption::Below => {
+                        loop_to_next(&mut l, 1, &nums, r);
+                        continue;
+                    }
+                };
+                match total.cmp(&target) {
+                    std::cmp::Ordering::Less => loop_to_next(&mut l, 1, &nums, r),
+                    std::cmp::Ordering::Equal => {
+                        ans.push([i, l, r, j].map(|x| nums[x]).into_iter().collect());
+                        loop_to_next(&mut l, 1, &nums, r);
+                        loop_to_next(&mut r, -1, &nums, l);
+                    }
+                    std::cmp::Ordering::Greater => loop_to_next(&mut r, -1, &nums, l),
+                }
+            }
+            loop_to_next(&mut i, 1, &nums, j);
+        }
+        i = 0;
+        loop_to_next(&mut j, -1, &nums, 0);
+    }
+    ans
 }
+
+#[cfg(feature = "all")]
+// Definition for singly-linked list.
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+#[cfg(feature = "all")]
+fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+    let mut dummy = ListNode { val: 0, next: head };
+    unsafe {
+        let mut fast = &mut dummy as *mut ListNode;
+        let mut slow = fast;
+        for _ in 0..n {
+            fast = (*fast).next.as_mut()?.as_mut();
+        }
+        while (*fast).next.is_some() {
+            fast = (*fast).next.as_mut()?.as_mut();
+            slow = (*slow).next.as_mut()?.as_mut();
+        }
+        (*slow).next = (*slow).next.take()?.next;
+    }
+    dummy.next
+}
+
+fn main() {}
