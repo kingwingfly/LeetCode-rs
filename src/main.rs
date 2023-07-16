@@ -16,7 +16,7 @@ fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     unreachable!();
 }
 
-#[cfg(target_feature = "all")]
+// #[cfg(target_feature = "all")]
 // Definition for singly-linked list.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -688,6 +688,177 @@ fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNo
         (*slow).next = (*slow).next.take()?.next;
     }
     dummy.next
+}
+
+#[cfg(feature = "all")]
+fn is_valid(s: String) -> bool {
+    let mut stack = vec![];
+    for c in s.chars() {
+        match c {
+            '(' | '[' | '{' => {
+                stack.push(c);
+                continue;
+            }
+            ')' => {
+                if Some('(') == stack.pop() {
+                    continue;
+                }
+            }
+            ']' => {
+                if Some('[') == stack.pop() {
+                    continue;
+                }
+            }
+            '}' => {
+                if Some('{') == stack.pop() {
+                    continue;
+                }
+            }
+            _ => unreachable!(),
+        }
+        return false;
+    }
+    stack.is_empty()
+}
+
+#[cfg(feature = "all")]
+fn merge_two_lists(
+    mut list1: Option<Box<ListNode>>,
+    mut list2: Option<Box<ListNode>>,
+) -> Option<Box<ListNode>> {
+    let mut head = None;
+    let mut cur = &mut head;
+    loop {
+        match (list1, list2) {
+            (Some(mut l1), Some(mut l2)) => {
+                if l1.val < l2.val {
+                    list1 = l1.next.take();
+                    list2 = Some(l2);
+                    cur = &mut cur.insert(l1).next
+                } else {
+                    list1 = Some(l1);
+                    list2 = l2.next.take();
+                    cur = &mut cur.insert(l2).next;
+                }
+            }
+            (x, y) => {
+                *cur = x.or(y);
+                break;
+            }
+        }
+    }
+    head
+}
+
+#[cfg(feature = "all")]
+fn generate_parenthesis(n: i32) -> Vec<String> {
+    let mut ans = vec![];
+    fn recursive(n: i32, ans: &mut Vec<String>, s: String, l_num: i32, r_num: i32, depth: i32) {
+        if 2 * n == depth {
+            ans.push(s);
+        } else {
+            for c in ['(', ')'] {
+                if c == '(' && l_num < n {
+                    recursive(n, ans, format!("{}{}", s, c), l_num + 1, r_num, depth + 1);
+                } else if c == ')' && l_num > r_num {
+                    recursive(n, ans, format!("{}{}", s, c), l_num, r_num + 1, depth + 1);
+                }
+            }
+        }
+    }
+    recursive(n, &mut ans, String::new(), 0, 0, 0);
+    ans
+}
+
+#[cfg(feature = "all")]
+fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+    fn sort_two(
+        mut list1: Option<Box<ListNode>>,
+        mut list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut node = None;
+        let mut cur = &mut node;
+        loop {
+            match (list1, list2) {
+                (Some(mut l1), Some(mut l2)) => {
+                    if l1.val < l2.val {
+                        list1 = l1.next.take();
+                        list2 = Some(l2);
+                        cur = &mut cur.insert(l1).next;
+                    } else {
+                        list1 = Some(l1);
+                        list2 = l2.next.take();
+                        cur = &mut cur.insert(l2).next;
+                    }
+                }
+                (x, y) => {
+                    *cur = x.or(y);
+                    break;
+                }
+            }
+        }
+        node
+    }
+    fn binary_sort(mut lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+        if lists.len() <= 1 {
+            lists.pop()?
+        } else if lists.len() == 2 {
+            sort_two(lists.pop().unwrap(), lists.pop().unwrap())
+        } else {
+            let right = lists.split_off(lists.len() >> 1);
+            let left = binary_sort(lists);
+            let right = binary_sort(right);
+            binary_sort(vec![left, right])
+        }
+    }
+    binary_sort(lists)
+}
+
+#[cfg(feature = "all")]
+use std::cmp::{Ord, Ordering, PartialEq};
+#[cfg(feature = "all")]
+use std::collections::BinaryHeap;
+
+#[cfg(feature = "all")]
+impl Ord for ListNode {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // 默认是最大堆，这里颠倒顺序，实现最小堆。
+        other.val.cmp(&self.val)
+    }
+}
+
+#[cfg(feature = "all")]
+impl PartialOrd for ListNode {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+#[cfg(feature = "all")]
+fn merge_k_lists_heap(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+    if lists.is_empty() {
+        return None;
+    }
+
+    let mut ans = Box::new(ListNode::new(0));
+    let mut ptr = &mut ans;
+    let mut heap = BinaryHeap::new();
+    // 把第一列的元素放到堆里。
+    for node in lists {
+        if let Some(n) = node {
+            heap.push(n);
+        }
+    }
+    // 弹出最小的，然后把它剩下的再加入到堆中。
+    while let Some(mut node) = heap.pop() {
+        if let Some(next) = node.next.take() {
+            heap.push(next);
+        }
+        ptr.next = Some(node);
+        ptr = ptr.next.as_mut().unwrap();
+    }
+
+    ans.next
 }
 
 fn main() {}
