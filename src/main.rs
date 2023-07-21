@@ -861,6 +861,7 @@ fn merge_k_lists_heap(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>
     ans.next
 }
 
+#[cfg(feature = "all")]
 fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
     let mut remain = head;
     let mut dummy = Box::new(ListNode { val: 0, next: None });
@@ -876,6 +877,7 @@ fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>>
     dummy.next
 }
 
+#[cfg(feature = "all")]
 fn reverse_one(
     head: Option<Box<ListNode>>,
     k: i32,
@@ -898,6 +900,22 @@ fn reverse_one(
         }
     }
     (dummy.next, remain)
+}
+
+fn remove_duplicates1(nums: &mut Vec<i32>) -> i32 {
+    nums.dedup();
+    nums.len() as i32
+}
+
+fn remove_duplicates2(nums: &mut Vec<i32>) -> i32 {
+    let mut slow = 0;
+    for fast in 0..nums.len() {
+        if nums[slow] != nums[fast] {
+            slow += 1;
+            nums[slow] = nums[fast];
+        }
+    }
+    (slow + 1) as i32
 }
 
 fn main() {}
