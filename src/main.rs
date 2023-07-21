@@ -902,17 +902,30 @@ fn reverse_one(
     (dummy.next, remain)
 }
 
+#[cfg(feature = "all")]
 fn remove_duplicates1(nums: &mut Vec<i32>) -> i32 {
     nums.dedup();
     nums.len() as i32
 }
 
+#[cfg(feature = "all")]
 fn remove_duplicates2(nums: &mut Vec<i32>) -> i32 {
     let mut slow = 0;
     for fast in 0..nums.len() {
         if nums[slow] != nums[fast] {
             slow += 1;
             nums[slow] = nums[fast];
+        }
+    }
+    (slow + 1) as i32
+}
+
+fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+    let mut slow = 0;
+    for fast in 0..nums.len() {
+        if nums[fast] != val {
+            nums[slow] = nums[fast];
+            slow += 1; 
         }
     }
     (slow + 1) as i32
