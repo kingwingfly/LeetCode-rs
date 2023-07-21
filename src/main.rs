@@ -861,4 +861,43 @@ fn merge_k_lists_heap(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>
     ans.next
 }
 
+fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+    let mut remain = head;
+    let mut dummy = Box::new(ListNode { val: 0, next: None });
+    let mut tail = &mut dummy;
+    while remain.is_some() {
+        let (new_head, new_remain) = reverse_one(remain, k);
+        remain = new_remain;
+        tail.next = new_head;
+        while tail.next.as_ref().is_some() {
+            tail = tail.next.as_mut().unwrap();
+        }
+    }
+    dummy.next
+}
+
+fn reverse_one(
+    head: Option<Box<ListNode>>,
+    k: i32,
+) -> (Option<Box<ListNode>>, Option<Box<ListNode>>) {
+    let mut pre = head.as_ref();
+    for _ in 0..k {
+        if pre.is_none() {
+            return (head, None);
+        }
+        pre = pre.unwrap().next.as_ref();
+    }
+
+    let mut dummy = ListNode { val: 0, next: None };
+    let mut remain = head;
+    for _ in 0..k {
+        if let Some(mut n) = remain {
+            remain = n.next.take();
+            n.next = dummy.next.take();
+            dummy.next = Some(n);
+        }
+    }
+    (dummy.next, remain)
+}
+
 fn main() {}
