@@ -920,15 +920,101 @@ fn remove_duplicates2(nums: &mut Vec<i32>) -> i32 {
     (slow + 1) as i32
 }
 
+#[cfg(feature = "all")]
 fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     let mut slow = 0;
     for fast in 0..nums.len() {
         if nums[fast] != val {
             nums[slow] = nums[fast];
-            slow += 1; 
+            slow += 1;
         }
     }
     (slow + 1) as i32
 }
 
-fn main() {}
+#[cfg(feature = "all")]
+fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    head.and_then(|mut n| match n.next {
+        Some(mut m) => {
+            n.next = swap_pairs(m.next);
+            m.next = Some(n);
+            Some(m)
+        }
+        None => Some(n),
+    })
+}
+
+#[cfg(feature = "all")]
+fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+    let length = {
+        let mut ret = 0;
+        let mut cur = &head;
+        while cur.is_some() {
+            cur = &cur.as_ref().unwrap().next;
+            ret += 1;
+        }
+        ret
+    };
+    head
+}
+
+pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i32> {
+    use std::cmp::Ordering;
+    use std::collections::HashMap;
+
+    assert!(n > 0);
+    let n = n as usize; // 节点数目 > 0
+    let mut degs: Vec<usize> = vec![0; n + 1]; // 节点的度
+    let mut cnt_e: HashMap<usize, usize> = HashMap::new(); // 边的数量，(1, 2), (2, 1)视为2次， key = 1 * n + 2
+    for edge in edges.iter() {
+        let (x, y) = (edge[0], edge[1]);
+        assert!(x >= 0);
+        assert!(y >= 0);
+        let (mut x, mut y) = (x as usize, y as usize);
+        if x < y {
+            (x, y) = (y, x);
+        }
+        degs[x] += 1;
+        degs[y] += 1;
+        let key = x * n + y;
+        cnt_e.insert(key, cnt_e.get(&key).unwrap_or(&0) + 1);
+    }
+
+    let mut cnt_deg: HashMap<usize, usize> = HashMap::new(); // 度的数量，与python的Counter(degs)相同
+    for &deg in degs[1..].iter() {
+        cnt_deg.insert(deg, cnt_deg.get(&deg).unwrap_or(&0) + 1);
+    }
+
+    // 选择两个度，使得两数之和恰好等于 i 的方案数。
+    let mut cnts = vec![0; degs.iter().max().unwrap_or(&0) * 2 + 2]; // 后缀和
+    for (&deg1, &c1) in cnt_deg.iter() {
+        for (&deg2, &c2) in cnt_deg.iter() {
+            // 只考虑 deg1 > deg2 与 deg1 = deg2，避免重复
+            match deg1.cmp(&deg2) {
+                Ordering::Less => cnts[deg1 + deg2] += c1 * c2, // deg1, deg2不同，则乘法原理
+                Ordering::Equal => cnts[deg1 + deg2] += c1 * (c1 - 1) >> 1, // deg1, deg2相同，则去组合数
+                Ordering::Greater => {}
+            }
+        }
+    }
+
+    for (e, c) in cnt_e {
+        // 点对 (x, y) 之间的连接不应计入 x与y 对外的连接数
+        let (x, y) = (e / n, e % n);
+        let s = degs[x] + degs[y];
+        cnts[s] -= 1;
+        cnts[s - c] += 1;
+    }
+    for i in (1..cnts.len()).rev() {
+        cnts[i - 1] += cnts[i];
+    }
+    for q in queries.iter_mut() {
+        *q = cnts[(*q as usize + 1).min(cnts.len() - 1)] as i32;
+    }
+    queries
+}
+
+fn main() {
+    let edges = vec![vec![1, 2], vec![2, 4], vec![1, 3], vec![2, 3], vec![2, 1]];
+    dbg!(count_pairs(4, edges, vec![2, 3]));
+}
