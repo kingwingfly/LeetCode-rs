@@ -958,6 +958,7 @@ fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>>
     head
 }
 
+#[cfg(feature = "all")]
 pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i32> {
     use std::cmp::Ordering;
     use std::collections::HashMap;
@@ -992,7 +993,7 @@ pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i
             // 只考虑 deg1 > deg2 与 deg1 = deg2，避免重复
             match deg1.cmp(&deg2) {
                 Ordering::Less => cnts[deg1 + deg2] += c1 * c2, // deg1, deg2不同，则乘法原理
-                Ordering::Equal => cnts[deg1 + deg2] += c1 * (c1 - 1) >> 1, // deg1, deg2相同，则去组合数
+                Ordering::Equal => cnts[deg1 + deg2] += c1 * (c1 - 1) >> 1, // deg1, deg2相同，则取组合数
                 Ordering::Greater => {}
             }
         }
@@ -1014,7 +1015,123 @@ pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i
     queries
 }
 
-fn main() {
-    let edges = vec![vec![1, 2], vec![2, 4], vec![1, 3], vec![2, 3], vec![2, 1]];
-    dbg!(count_pairs(4, edges, vec![2, 3]));
+#[cfg(feature = "all")]
+fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+    let mut slow_idx = 0;
+    for pos in 0..nums.len() {
+        if nums[pos] != val {
+            nums[slow_idx] = nums[pos];
+            slow_idx += 1;
+        }
+    }
+    slow_idx as i32
+}
+
+#[cfg(feature = "all")]
+fn str_str(haystack: String, needle: String) -> i32 {
+    match haystack.find(&needle) {
+        Some(ret) => ret as i32,
+        None => -1,
+    }
+}
+
+#[cfg(feature = "all")]
+fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
+    use std::collections::HashMap;
+    assert!(!words.is_empty() && !s.is_empty());
+    let m = words.len();
+    let n = words[0].len();
+    let ans_len = m * n;
+    let mut ret = vec![];
+    if s.len() < ans_len {
+        return ret;
+    };
+
+    let mut start = 0;
+    while start < n {
+        dbg!(start);
+        let mut hm = HashMap::with_capacity(m);
+        let mut left = start;
+        while left + ans_len <= s.len() {
+            match left {
+                left if left < n => {
+                    for i in 0..m {
+                        let word_slice = &s[(left + i * n)..(left + (i + 1) * n)];
+                        dbg!(word_slice);
+                        hm.insert(word_slice, hm.get(word_slice).unwrap_or(&0) + 1);
+                    }
+                }
+                _ => {
+                    dbg!(left);
+                    let word_slice = &s[(left + (m - 1) * n)..(left + ans_len)];
+                    dbg!(word_slice);
+                    hm.insert(word_slice, hm.get(word_slice).unwrap_or(&0) + 1);
+                }
+            }
+            dbg!(&hm);
+            let mut matched_word_num = 0;
+            let mut hm_c = hm.clone();
+            for w in words.iter() {
+                match hm_c.get_mut(&w[..]) {
+                    Some(x) if *x > 0 && matched_word_num < m => {
+                        *x -= 1;
+                        matched_word_num += 1;
+                    }
+                    _ => break,
+                }
+            }
+            if matched_word_num == m {
+                ret.push(left as i32);
+            }
+            let should_drop = &s[left..(left + n)];
+            dbg!(should_drop);
+            hm.insert(should_drop, hm.get(should_drop).unwrap() - 1);
+            dbg!(&hm);
+            left += n;
+        }
+        start += 1;
+    }
+
+    ret
+}
+
+#[cfg(feature = "all")]
+fn find_substring_better(s: String, words: Vec<String>) -> Vec<i32> {
+    use std::collections::HashMap;
+    macro_rules! helper { // 哈希统计，为 0 时移除
+        ($diff:expr, $s:expr, $cnt:expr) => {
+            let t = $s as &str;
+            *$diff.entry(t).or_insert(0) += $cnt;
+            if *$diff.get(t).unwrap() == 0 {$diff.remove(t);}
+        }
+    }
+    let mut diff = HashMap::new();
+    let (m, n) = (words.len(), words[0].len());
+    let mut ans = vec![];
+    for idx in 0..n { // 仅需要分为 n 组
+        if idx + m * n > s.len() {break}
+        for i in (idx..idx + m * n).step_by(n) {
+            helper!(diff, &s[i..i + n], 1);
+        }
+        for w in words.iter() {
+            helper!(diff, w, -1);
+        }
+        if diff.is_empty() {ans.push(idx as i32)}
+        for i in (idx + n..s.len() - m * n + 1).step_by(n) {
+            helper!(diff, &s[i - n..i], -1); // 移除左边
+            helper!(diff, &s[i + (m - 1) * n..i + m * n], 1); // 添加右边
+            if diff.is_empty() {ans.push(i as i32)}
+        }
+        diff.clear();
+    }
+    ans
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test() {
+    }
 }
