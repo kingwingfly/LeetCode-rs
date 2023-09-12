@@ -1,5 +1,5 @@
 /// judge if two numbers in the Vec could sum to target
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     use std::collections::HashMap;
 
@@ -16,7 +16,7 @@ fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     unreachable!();
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 // Definition for singly-linked list.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -24,7 +24,7 @@ pub struct ListNode {
     pub next: Option<Box<ListNode>>,
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 impl ListNode {
     #[inline]
     fn new(val: i32) -> Self {
@@ -32,7 +32,7 @@ impl ListNode {
     }
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     fn carried(
         l1: Option<Box<ListNode>>,
@@ -63,7 +63,7 @@ fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Opti
     carried(l1, l2, 0)
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn length_of_longest_substring(s: String) -> i32 {
     let ptr0 = s.as_ptr();
     let mut ptr1 = s.as_ptr();
@@ -88,7 +88,7 @@ fn length_of_longest_substring(s: String) -> i32 {
     ans as i32
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
     fn find_pos(nums1: &Vec<i32>, nums2: &Vec<i32>, mut pos: usize) -> f64 {
         let (mut l1, mut l2) = (0, 0);
@@ -150,7 +150,7 @@ fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
     }
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn longest_palindrome(s: String) -> String {
     fn foo(s: &[u8], mut l: isize, mut r: usize) -> (usize, usize) {
         while l >= 0 && r < s.len() && s[l as usize] == s[r] {
@@ -175,7 +175,7 @@ fn longest_palindrome(s: String) -> String {
     s[start..=end].to_string()
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn convert1(s: String, num_rows: i32) -> String {
     let mut ans = String::new();
     for mut row in 0..num_rows {
@@ -206,7 +206,7 @@ fn convert1(s: String, num_rows: i32) -> String {
     ans
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn convert(s: String, num_rows: i32) -> String {
     if num_rows <= 1 {
         return s;
@@ -223,7 +223,7 @@ fn convert(s: String, num_rows: i32) -> String {
     v.concat()
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn reverse(mut x: i32) -> i32 {
     let mut ret = 0;
     while x >= 10 || x <= -10 {
@@ -239,7 +239,7 @@ fn reverse(mut x: i32) -> i32 {
     ret
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn my_atoi(s: String) -> i32 {
     let mut ret = 0;
     let mut flag = 0;
@@ -272,7 +272,7 @@ fn my_atoi(s: String) -> i32 {
     ret
 }
 
-#[cfg(target_feature = "1-30")]
+#[cfg(target_feature = "1_30")]
 fn is_palindrome(mut x: i32) -> bool {
     if x < 0 {
         return false;
@@ -328,7 +328,7 @@ fn is_palindrome(mut x: i32) -> bool {
     // return x == temp || x == temp / 10;
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn is_match(s: String, p: String) -> bool {
     let s: Vec<char> = s.chars().collect(); // 使用vec胖指针索引 较 s.chars().nth() 快得多。
     let p: Vec<char> = p.chars().collect();
@@ -351,7 +351,7 @@ fn is_match(s: String, p: String) -> bool {
     dp[s.len()][p.len()]
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn max_area(height: Vec<i32>) -> i32 {
     let (mut i, mut j) = (0, height.len() - 1);
     let cal = |i: usize, j: usize| -> usize { (j - i) * height[i].min(height[j]) as usize };
@@ -366,7 +366,7 @@ fn max_area(height: Vec<i32>) -> i32 {
     area as i32
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn int_to_roman(mut num: i32) -> String {
     let mut ans = String::new();
     let foo = |i: i32, symbol: &str, num: &mut i32, ans: &mut String| loop {
@@ -397,7 +397,7 @@ fn int_to_roman(mut num: i32) -> String {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 pub fn roman_to_int(mut s: String) -> i32 {
     let mut ans = 0;
     let foo = |i: i32, symbol: &str, ans: &mut i32, s: &mut String| loop {
@@ -428,7 +428,7 @@ pub fn roman_to_int(mut s: String) -> i32 {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn longest_common_prefix(strs: Vec<String>) -> String {
     let mut ans = String::new();
     let mut strs_vec: Vec<_> = strs.iter().map(|s| s.chars()).collect();
@@ -453,7 +453,7 @@ fn longest_common_prefix(strs: Vec<String>) -> String {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
     let mut ans = vec![];
     if nums.len() < 3 {
@@ -495,7 +495,7 @@ fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     assert!(nums.len() >= 3);
     let mut ans = i32::MAX;
@@ -542,7 +542,7 @@ fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 macro_rules! hashmap {
     ($($key:expr => $value: expr), *) => {
         {
@@ -553,13 +553,13 @@ macro_rules! hashmap {
     };
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 struct LetterCombination<'a> {
     digits: Vec<&'a str>,
     ans: Vec<String>,
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 impl<'a> LetterCombination<'a> {
     fn new(digits: String) -> Self {
         assert!(!digits.contains("1"));
@@ -585,13 +585,13 @@ impl<'a> LetterCombination<'a> {
     }
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn letter_combinations(digits: String) -> Vec<String> {
     let mut lc = LetterCombination::new(digits);
     lc.dfs()
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn four_sum(mut nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
     let mut ans = vec![];
     if nums.len() < 4 {
@@ -664,7 +664,7 @@ fn four_sum(mut nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 // Definition for singly-linked list.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -672,7 +672,7 @@ pub struct ListNode {
     pub next: Option<Box<ListNode>>,
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
     let mut dummy = ListNode { val: 0, next: head };
     unsafe {
@@ -690,7 +690,7 @@ fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNo
     dummy.next
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn is_valid(s: String) -> bool {
     let mut stack = vec![];
     for c in s.chars() {
@@ -721,7 +721,7 @@ fn is_valid(s: String) -> bool {
     stack.is_empty()
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn merge_two_lists(
     mut list1: Option<Box<ListNode>>,
     mut list2: Option<Box<ListNode>>,
@@ -750,7 +750,7 @@ fn merge_two_lists(
     head
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn generate_parenthesis(n: i32) -> Vec<String> {
     let mut ans = vec![];
     fn recursive(n: i32, ans: &mut Vec<String>, s: String, l_num: i32, r_num: i32, depth: i32) {
@@ -770,7 +770,7 @@ fn generate_parenthesis(n: i32) -> Vec<String> {
     ans
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
     fn sort_two(
         mut list1: Option<Box<ListNode>>,
@@ -814,12 +814,12 @@ fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
     binary_sort(lists)
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 use std::cmp::{Ord, Ordering, PartialEq};
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 use std::collections::BinaryHeap;
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 impl Ord for ListNode {
     fn cmp(&self, other: &Self) -> Ordering {
         // 默认是最大堆，这里颠倒顺序，实现最小堆。
@@ -827,14 +827,14 @@ impl Ord for ListNode {
     }
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 impl PartialOrd for ListNode {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn merge_k_lists_heap(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
     if lists.is_empty() {
         return None;
@@ -861,7 +861,7 @@ fn merge_k_lists_heap(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>
     ans.next
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
     let mut remain = head;
     let mut dummy = Box::new(ListNode { val: 0, next: None });
@@ -877,7 +877,7 @@ fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>>
     dummy.next
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn reverse_one(
     head: Option<Box<ListNode>>,
     k: i32,
@@ -902,13 +902,13 @@ fn reverse_one(
     (dummy.next, remain)
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn remove_duplicates1(nums: &mut Vec<i32>) -> i32 {
     nums.dedup();
     nums.len() as i32
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn remove_duplicates2(nums: &mut Vec<i32>) -> i32 {
     let mut slow = 0;
     for fast in 0..nums.len() {
@@ -920,7 +920,7 @@ fn remove_duplicates2(nums: &mut Vec<i32>) -> i32 {
     (slow + 1) as i32
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     let mut slow = 0;
     for fast in 0..nums.len() {
@@ -932,7 +932,7 @@ fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     (slow + 1) as i32
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     head.and_then(|mut n| match n.next {
         Some(mut m) => {
@@ -944,7 +944,7 @@ fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     })
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
     let length = {
         let mut ret = 0;
@@ -958,7 +958,7 @@ fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>>
     head
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i32> {
     use std::cmp::Ordering;
     use std::collections::HashMap;
@@ -1015,7 +1015,7 @@ pub fn count_pairs(n: i32, edges: Vec<Vec<i32>>, mut queries: Vec<i32>) -> Vec<i
     queries
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     let mut slow_idx = 0;
     for pos in 0..nums.len() {
@@ -1027,7 +1027,7 @@ fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     slow_idx as i32
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn str_str(haystack: String, needle: String) -> i32 {
     match haystack.find(&needle) {
         Some(ret) => ret as i32,
@@ -1035,7 +1035,7 @@ fn str_str(haystack: String, needle: String) -> i32 {
     }
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
     use std::collections::HashMap;
     assert!(!words.is_empty() && !s.is_empty());
@@ -1095,7 +1095,7 @@ fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
     ret
 }
 
-#[cfg(feature = "1-30")]
+#[cfg(feature = "1_30")]
 fn find_substring_better(s: String, words: Vec<String>) -> Vec<i32> {
     use std::collections::HashMap;
     macro_rules! helper {
