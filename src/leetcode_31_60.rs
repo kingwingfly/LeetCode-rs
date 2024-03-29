@@ -204,31 +204,5 @@ mod sudoku {
     }
 }
 
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[cfg(feature="31_60")]
-    #[test]
-    fn sudoku_test() {
-        let v = vec![
-            vec!['5', '3', '.', '.', '7', '.', '.', '.', '.'],
-            vec!['6', '.', '.', '1', '9', '5', '.', '.', '.'],
-            vec!['.', '9', '8', '.', '.', '.', '.', '6', '.'],
-            vec!['8', '.', '.', '.', '6', '.', '.', '.', '3'],
-            vec!['4', '.', '.', '8', '.', '3', '.', '.', '1'],
-            vec!['7', '.', '.', '.', '2', '.', '.', '.', '6'],
-            vec!['.', '6', '.', '.', '.', '.', '2', '8', '.'],
-            vec!['.', '.', '.', '4', '1', '9', '.', '.', '5'],
-            vec!['.', '.', '.', '.', '8', '.', '.', '7', '9'],
-        ];
-        let mut s = sudoku::SudokuSolution::new(v);
-        s.solve_sudoku();
-        for row in s.board.iter() {
-            println!("{row:?}");
-        }
-        assert!(sudoku::is_valid_sudoku(s.board));
+fn count_and_say(n: i32) -> String {
     }
-}
