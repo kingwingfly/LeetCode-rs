@@ -205,4 +205,68 @@ mod sudoku {
 }
 
 fn count_and_say(n: i32) -> String {
+    let mut s = "1".to_string();
+    for _ in 1..n {
+        let mut t = String::new();
+        let mut i = 0;
+        while i < s.len() {
+            let mut j = i + 1;
+            while j < s.len() && s.as_bytes()[i] == s.as_bytes()[j] {
+                j += 1;
+            }
+            t.push_str(&(j - i).to_string());
+            t.push(s.as_bytes()[i] as char);
+            i = j;
+        }
+        s = t;
     }
+    s
+}
+
+fn combination_sum(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+    fn dfs(
+        a: &Vec<i32>,
+        cur: i32,
+        target: i32,
+        idx: usize,
+        tmp: &mut Vec<i32>,
+        ans: &mut Vec<Vec<i32>>,
+    ) {
+        match cur.cmp(&target) {
+            std::cmp::Ordering::Less => {
+                for i in idx..a.len() {
+                    tmp.push(a[i]);
+                    dfs(a, cur + a[i], target, i, tmp, ans);
+                    tmp.pop();
+                }
+            }
+            std::cmp::Ordering::Equal => {
+                ans.push(tmp.clone());
+            }
+            std::cmp::Ordering::Greater => {}
+        }
+    }
+    let mut ans = Vec::with_capacity(150);
+    dfs(
+        &candidates,
+        0,
+        target,
+        0,
+        &mut Vec::with_capacity(64),
+        &mut ans,
+    );
+    ans
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test() {
+        count_and_say(1);
+        count_and_say(2);
+        count_and_say(3);
+        count_and_say(4);
+    }
+}

@@ -9,6 +9,7 @@ edition = "2021"
 
 
 [features]
+default = ["31_60"]
 all = []
 1_30 = []
 31_60 = []
