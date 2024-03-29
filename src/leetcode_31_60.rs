@@ -1,7 +1,6 @@
 // 我们需要将一个左边的「较小数」与一个右边的「较大数」交换，以能够让当前排列变大，从而得到下一个排列。
 // 同时我们要让这个「较小数」尽量靠右，而「较大数」尽可能小。当交换完成后，「较大数」右边的数需要按照升序重新排列。
 // 这样可以在保证新排列大于原来排列的情况下，使变大的幅度尽可能小。
-#[cfg(feature = "31_60")]
 fn next_permutation(nums: &mut Vec<i32>) {
     for l in (0..nums.len() - 1).rev() {
         if nums[l] < nums[l + 1] {
@@ -21,7 +20,6 @@ fn next_permutation(nums: &mut Vec<i32>) {
     nums.sort();
 }
 
-#[cfg(feature = "31_60")]
 fn longest_valid_parentheses(s: String) -> i32 {
     let mut dp = vec![0; s.len()];
     let s = s.as_bytes();
@@ -52,7 +50,6 @@ fn longest_valid_parentheses(s: String) -> i32 {
     ret as i32
 }
 
-#[cfg(feature = "31_60")]
 fn search(nums: Vec<i32>, target: i32) -> i32 {
     let (mut l, mut r) = (0, nums.len() - 1);
     while l < r {
@@ -69,7 +66,6 @@ fn search(nums: Vec<i32>, target: i32) -> i32 {
     }
 }
 
-#[cfg(feature = "31_60")]
 fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
     let (l, r) = (
         nums.partition_point(|&x| x < target),
@@ -82,12 +78,10 @@ fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
     }
 }
 
-#[cfg(feature = "31_60")]
 fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
     nums.partition_point(|&x| x < target) as i32
 }
 
-#[cfg(feature = "31_60")]
 mod sudoku {
     pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
         let (mut rows, mut cols, mut blocks) = ([0; 9], [0; 9], [0; 9]);
@@ -209,6 +203,8 @@ mod sudoku {
         }
     }
 }
+
+
 
 #[cfg(test)]
 mod tests {
