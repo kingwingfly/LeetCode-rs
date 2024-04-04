@@ -297,6 +297,8 @@ fn combination_sum2(mut candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
     ans
 }
 
+fn first_missing_positive(nums: Vec<i32>) -> i32 {}
+
 #[cfg(test)]
 mod tests {
     use super::*;
