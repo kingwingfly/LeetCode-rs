@@ -297,7 +297,26 @@ fn combination_sum2(mut candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
     ans
 }
 
-fn first_missing_positive(nums: Vec<i32>) -> i32 {}
+fn first_missing_positive(mut nums: Vec<i32>) -> i32 {
+    let l = nums.len();
+    for i in nums.iter_mut() {
+        if *i <= 0 {
+            *i = l as i32 + 1;
+        }
+    }
+    for i in 0..l {
+        let n = nums[i].unsigned_abs() as usize;
+        if n <= l {
+            nums[n - 1] = -nums[n - 1].abs();
+        }
+    }
+    for (i, n) in nums.iter().enumerate() {
+        if *n > 0 {
+            return i as i32 + 1;
+        }
+    }
+    nums.len() as i32 + 1
+}
 
 #[cfg(test)]
 mod tests {
@@ -305,7 +324,7 @@ mod tests {
 
     #[test]
     fn test() {
-        let ans = combination_sum2(vec![2, 5, 2, 1, 2], 5);
+        let ans = first_missing_positive(vec![3, 4, -1, 1]);
         dbg!(ans);
     }
 }
