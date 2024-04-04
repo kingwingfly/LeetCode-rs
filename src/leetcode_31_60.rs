@@ -318,13 +318,37 @@ fn first_missing_positive(mut nums: Vec<i32>) -> i32 {
     nums.len() as i32 + 1
 }
 
+fn trap(height: Vec<i32>) -> i32 {
+    let (mut l, mut r) = (0, height.len() - 1);
+    let (mut l_max, mut r_max) = (0, 0);
+    let mut ans = 0;
+    while l < r {
+        if height[l] < height[r] {
+            if height[l] < l_max {
+                ans += l_max - height[l];
+            } else {
+                l_max = height[l];
+            }
+            l += 1;
+        } else {
+            if height[r] < r_max {
+                ans += r_max - height[r];
+            } else {
+                r_max = height[r];
+            }
+            r -= 1;
+        }
+    }
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test() {
-        let ans = first_missing_positive(vec![3, 4, -1, 1]);
+        let ans = trap(vec![0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]);
         dbg!(ans);
     }
 }
