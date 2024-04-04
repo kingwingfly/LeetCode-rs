@@ -258,12 +258,52 @@ fn combination_sum(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
     ans
 }
 
+fn combination_sum2(mut candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+    fn dfs(
+        a: &Vec<i32>,
+        cur: i32,
+        target: i32,
+        idx: usize,
+        tmp: &mut Vec<i32>,
+        ans: &mut Vec<Vec<i32>>,
+    ) {
+        match cur.cmp(&target) {
+            std::cmp::Ordering::Less => {
+                for i in idx..a.len() {
+                    if i > idx && a[i] == a[i - 1] {
+                        continue;
+                    }
+                    tmp.push(a[i]);
+                    dfs(a, cur + a[i], target, i + 1, tmp, ans);
+                    tmp.pop();
+                }
+            }
+            std::cmp::Ordering::Equal => {
+                ans.push(tmp.clone());
+            }
+            std::cmp::Ordering::Greater => {}
+        }
+    }
+    candidates.sort_unstable();
+    let mut ans = Vec::with_capacity(150);
+    dfs(
+        &candidates,
+        0,
+        target,
+        0,
+        &mut Vec::with_capacity(64),
+        &mut ans,
+    );
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test() {
-        combination_sum(vec![1, 2, 3], 6);
+        let ans = combination_sum2(vec![2, 5, 2, 1, 2], 5);
+        dbg!(ans);
     }
 }
