@@ -264,9 +264,6 @@ mod tests {
 
     #[test]
     fn test() {
-        count_and_say(1);
-        count_and_say(2);
-        count_and_say(3);
-        count_and_say(4);
+        combination_sum(vec![1, 2, 3], 6);
     }
 }
