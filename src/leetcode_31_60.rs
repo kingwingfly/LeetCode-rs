@@ -342,13 +342,107 @@ fn trap(height: Vec<i32>) -> i32 {
     ans
 }
 
+fn multiply(num1: String, num2: String) -> String {
+    if num1 == "0" || num2 == "0" {
+        return "0".to_string();
+    }
+    let mut mul: Vec<i32> = vec![0; num1.len() + num2.len()];
+    let c1: Vec<i32> = num1.chars().rev().map(|x| x as i32 - 48).collect();
+    let c2: Vec<i32> = num2.chars().rev().map(|x| x as i32 - 48).collect();
+    for i in 0..c1.len() {
+        for j in 0..c2.len() {
+            mul[i + j] += c1[i] * c2[j];
+        }
+    }
+    for i in 0..mul.len() - 1 {
+        mul[i + 1] += mul[i] / 10;
+        mul[i] %= 10;
+    }
+    mul.into_iter()
+        .rev()
+        .skip_while(|&x| x == 0)
+        .fold(String::new(), |mut s, x| {
+            s.push((x + 48) as u8 as char);
+            s
+        })
+}
+
+fn is_match(s: String, p: String) -> bool {
+    let (n, m) = (s.len(), p.len());
+    let new_s = " ".to_owned() + &s;
+    let new_p = " ".to_owned() + &p;
+
+    let mut dp = vec![vec![false; m + 1]; n + 1];
+    dp[0][0] = true;
+
+    for (i, c1) in new_s.chars().enumerate() {
+        for (j, c2) in new_p.chars().enumerate().skip(1) {
+            if c2 == '*' {
+                dp[i][j] = dp[i][j - 1] || (i >= 1 && dp[i - 1][j]);
+            } else {
+                dp[i][j] = i >= 1 && dp[i - 1][j - 1] && (c1 == c2 || c2 == '?');
+            }
+        }
+    }
+    dp[n][m]
+}
+
+fn is_match2(s: String, p: String) -> bool {
+    let s = s.as_bytes();
+    let p = p.as_bytes();
+    let (mut i, mut j, mut m) = (0, 0, 0);
+    let mut start = None;
+
+    while i < s.len() {
+        if j < p.len() && (s[i] == p[j] || p[j] == b'?') {
+            i += 1;
+            j += 1;
+        } else if j < p.len() && p[j] == b'*' {
+            start = Some(j);
+            m = i; // 记录*匹配的位置
+            j += 1;
+        } else if let Some(start) = start {
+            // 如果遇到不匹配的字符，回溯到m+1的位置，重新匹配
+            j = start + 1;
+            m += 1;
+            i = m;
+        } else {
+            return false;
+        }
+    }
+
+    while j < p.len() {
+        if p[j] != b'*' {
+            return false;
+        }
+        j += 1
+    }
+    true
+}
+
+fn jump(nums: Vec<i32>) -> i32 {
+    use std::cmp::max;
+    let mut steps = 0;
+    let mut end = 0;
+    let mut max_pos = 0;
+    for (i, n) in nums[..nums.len() - 1].iter().enumerate() {
+        max_pos = max(max_pos, n + i as i32); // 记录当前位置能跳到的最远位置
+        if i as i32 == end {
+            // 如果当前位置等于上一次跳跃的最远位置，说明需要再跳一次
+            end = max_pos; // 更新最远位置
+            steps += 1;
+        }
+    }
+    steps
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test() {
-        let ans = trap(vec![0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]);
+        let ans = jump(vec![2, 3, 1, 1, 4]);
         dbg!(ans);
     }
 }
