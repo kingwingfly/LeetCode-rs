@@ -428,7 +428,7 @@ fn jump(nums: Vec<i32>) -> i32 {
     for (i, n) in nums[..nums.len() - 1].iter().enumerate() {
         max_pos = max(max_pos, n + i as i32); // 记录当前位置能跳到的最远位置
         if i as i32 == end {
-            // 如果当前位置等于上一次跳跃的最远位置，说明需要再跳一次
+            // 如果当前位置等于上一次跳跃的最远位置，说明需要跳一次
             end = max_pos; // 更新最远位置
             steps += 1;
         }
